@@ -3,6 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MandarinPro">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- iOS Splash Screens -->
+    <link rel="apple-touch-startup-image" href="/splash/iphone-x-splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="/splash/iphone-plus-splash.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="/splash/iphone-regular-splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -367,6 +380,32 @@
             .touch-target {
                 min-height: 44px;
                 min-width: 44px;
+            }
+
+            /* PWA Standalone Mode Styles */
+            .pwa-standalone {
+                /* Remove browser UI elements when in standalone mode */
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            /* Enhanced mobile app feel */
+            @media (max-width: 768px) {
+                /* Smoother scrolling */
+                html {
+                    -webkit-overflow-scrolling: touch;
+                }
+                
+                /* Prevent text selection on double-tap */
+                .nav-tab, .lesson-card, button {
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
+                
+                /* Enhanced touch feedback */
+                .lesson-card:active, .nav-tab:active {
+                    transform: scale(0.98);
+                }
             }
         }
 
@@ -1391,6 +1430,98 @@
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
+            // Register Service Worker for PWA functionality
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then((registration) => {
+                            console.log('📱 MandarinPro PWA: ServiceWorker registered successfully:', registration.scope);
+                        })
+                        .catch((error) => {
+                            console.log('📱 MandarinPro PWA: ServiceWorker registration failed:', error);
+                        });
+                });
+            }
+
+            // PWA Install Prompt Handling
+            let deferredPrompt;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('📱 MandarinPro PWA: Install prompt ready');
+                
+                // Show install button or UI
+                showInstallButton();
+            });
+
+            function showInstallButton() {
+                // Create floating install button
+                const installButton = document.createElement('button');
+                installButton.innerHTML = '📲 Install App';
+                installButton.className = 'fixed bottom-20 right-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 transform hover:scale-105';
+                installButton.onclick = () => installApp();
+                document.body.appendChild(installButton);
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    if (installButton.parentNode) {
+                        installButton.style.opacity = '0';
+                        setTimeout(() => installButton.remove(), 300);
+                    }
+                }, 10000);
+            }
+
+            function installApp() {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('📱 MandarinPro PWA: User accepted install');
+                        } else {
+                            console.log('📱 MandarinPro PWA: User dismissed install');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            }
+
+            // PWA App-like Behavior
+            window.addEventListener('appinstalled', () => {
+                console.log('📱 MandarinPro PWA: App installed successfully!');
+                // Hide install button if shown
+                const installButton = document.querySelector('[onclick="installApp()"]');
+                if (installButton) installButton.remove();
+            });
+
+            // Handle PWA launch from homescreen
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('📱 MandarinPro PWA: Running in standalone mode');
+                // Add app-specific behaviors here
+                document.documentElement.classList.add('pwa-standalone');
+            }
+
+            // Prevent zoom on double-tap (mobile app behavior)
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (event) => {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+
+            // Handle offline/online status
+            window.addEventListener('online', () => {
+                console.log('📱 MandarinPro PWA: Back online');
+                // Could show online indicator
+            });
+
+            window.addEventListener('offline', () => {
+                console.log('📱 MandarinPro PWA: Gone offline');
+                // Could show offline indicator
+            });
+
             // Try to load progress from URL first, then fall back to local storage
             const urlProgressLoaded = loadProgressFromURL();
             
