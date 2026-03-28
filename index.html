@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // ElevenLabs API Configuration
-        const ELEVENLABS_API_KEY = 'YOUR_ELEVENLABS_API_KEY'; // You'll need to add your API key
-        const ELEVENLABS_VOICE_ID = '9BWtsMINqrJLrRacOk9x'; // Chinese voice ID (you can change this)
+        const ELEVENLABS_API_KEY = 'sk_9e7b2c9e0b09869c77fde18286a2fd0c68300593148b2bbf'; // Steve's API key
+        const ELEVENLABS_VOICE_ID = '9BWtsMINqrJLrRacOk9x'; // Chinese voice ID
         const ELEVENLABS_MODEL_ID = 'eleven_multilingual_v2';
     </script>
     <style>
@@ -650,6 +650,12 @@
                 ELEVENLABS_API_KEY = savedKey;
                 document.getElementById('apiKeyInput').value = savedKey;
                 testApiConnection();
+            } else {
+                // Auto-populate with Steve's API key if no saved key
+                ELEVENLABS_API_KEY = 'sk_9e7b2c9e0b09869c77fde18286a2fd0c68300593148b2bbf';
+                document.getElementById('apiKeyInput').value = ELEVENLABS_API_KEY;
+                localStorage.setItem('elevenLabsApiKey', ELEVENLABS_API_KEY);
+                testApiConnection();
             }
         }
 
@@ -808,7 +814,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             showSection('lessons');
             updateTotalScore();
-            loadApiKey(); // Load saved API key
+            loadApiKey(); // Load saved API key (auto-populates with Steve's key)
+            
+            // Auto-test API connection with Steve's key
+            if (ELEVENLABS_API_KEY && ELEVENLABS_API_KEY !== 'YOUR_ELEVENLABS_API_KEY') {
+                testApiConnection();
+            }
         });
     </script>
 </body>
