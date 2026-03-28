@@ -3,113 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MandarinPro - Interactive Practice</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+    </button>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Theme System - Modern Light/Dark Mode Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            const icon = document.getElementById('themeIcon');
+            icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            // Add animation
+            const button = document.querySelector('.theme-toggle');
+            button.style.transform = 'scale(1.2) rotate(180deg)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1) rotate(0deg)';
+            }, 300);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Load theme on page load
+        document.addEventListener('DOMContentLoaded', loadTheme);
+
         // ElevenLabs API Configuration
         const ELEVENLABS_API_KEY = 'sk_9e7b2c9e0b09869c77fde18286a2fd0c68300593148b2bbf'; // Steve's API key
         const ELEVENLABS_VOICE_ID = '9BWtsMINqrJLrRacOk9x'; // Chinese voice ID
         const ELEVENLABS_MODEL_ID = 'eleven_multilingual_v2';
     </script>
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* CSS Variables for Theme System */
+        :root {
+            /* Light Mode Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --border-color: #e2e8f0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --gradient-start: #3b82f6;
+            --gradient-end: #8b5cf6;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+
+        [data-theme="dark"] {
+            /* Dark Mode Colors */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --accent-primary: #60a5fa;
+            --accent-secondary: #a78bfa;
+            --border-color: #475569;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --success-color: #34d399;
+            --error-color: #f87171;
+            --warning-color: #fbbf24;
+            --gradient-start: #60a5fa;
+            --gradient-end: #a78bfa;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: rgba(0, 0, 0, 0.2);
         }
-        .correct { 
-            background-color: #10b981 !important; 
-            color: white; 
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .incorrect { 
-            background-color: #ef4444 !important; 
-            color: white; 
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .character-display {
-            font-size: 4rem;
-            font-family: 'SimSun', '宋体', serif;
-        }
-        .pinyin-display {
-            font-size: 1.5rem;
-            color: #6366f1;
+
+        /* Modern Typography */
+        h1, h2, h3, h4, h5, h6 {
             font-weight: 600;
+            letter-spacing: -0.025em;
         }
-        .progress-bar {
-            transition: width 0.5s ease;
-        }
-        .lesson-card {
+
+        /* Glass Morphism Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px var(--glass-shadow);
             transition: all 0.3s ease;
         }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--glass-shadow);
+        }
+
+        /* Gradient Backgrounds */
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            transition: background 0.3s ease;
+        }
+
+        /* Modern Buttons */
+        .modern-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .modern-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .modern-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px var(--glass-shadow);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 30px var(--glass-shadow);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 16px;
+                right: 16px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        /* Character Display */
+        .character-display {
+            font-size: 4rem;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-weight: 300;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.5s ease;
+            border-radius: 8px;
+        }
+
+        /* Modern Input Fields */
+        .modern-input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Lesson Cards */
+        .lesson-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
         .lesson-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 24px var(--shadow-color);
+            border-color: var(--accent-primary);
+        }
+
+        /* Navigation Tabs */
+        .nav-tab {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Smooth Transitions */
+        * {
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        /* Loading Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Responsive Typography */
+        @media (max-width: 768px) {
+            .character-display {
+                font-size: 3rem;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
         }
     </style>
 </head>
 <body class="gradient-bg min-h-screen">
     <!-- Header -->
-    <header class="text-white p-6">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold">🇨🇳 MandarinPro Practice</h1>
-                <p class="text-lg opacity-90">Interactive Mandarin Learning</p>
-            </div>
-            <div class="text-right">
-                <div class="text-sm opacity-75">Progress</div>
-                <div class="text-xl font-bold" id="totalScore">0 / 0</div>
+    <header class="gradient-bg text-white p-8">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <div class="float mb-4">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-2">🇨🇳 MandarinPro</h1>
+                </div>
+                <p class="text-xl md:text-2xl mb-4 opacity-90">Interactive Mandarin Learning</p>
+                <p class="text-lg opacity-80 max-w-2xl mx-auto">Master Chinese with AI-powered lessons, real pronunciation, and progress tracking</p>
+                
+                <!-- Quick Stats -->
+                <div class="flex justify-center items-center space-x-8 mt-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold" id="totalScore">0</div>
+                        <div class="text-sm opacity-75">Words Mastered</div>
+                    </div>
+                    <div class="w-px h-8 bg-white opacity-30"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold" id="streakDays">0</div>
+                        <div class="text-sm opacity-75">Day Streak</div>
+                    </div>
+                    <div class="w-px h-8 bg-white opacity-30"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">6</div>
+                        <div class="text-sm opacity-75">Lessons</div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
     <nav class="container mx-auto px-6 mb-8">
-        <div class="flex space-x-4">
-            <button onclick="showSection('lessons')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="lessonsTab">📚 Lessons</button>
-            <button onclick="showSection('practice')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="practiceTab">🎯 Practice</button>
-            <button onclick="showSection('pronunciation')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="pronunciationTab">🎤 Pronunciation</button>
-            <button onclick="showSection('progress')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="progressTab">📊 Progress</button>
+        <div class="flex space-x-4 justify-center">
+            <button onclick="showSection('lessons')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="lessonsTab">📚 Lessons</button>
+            <button onclick="showSection('practice')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="practiceTab">🎯 Practice</button>
+            <button onclick="showSection('pronunciation')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="pronunciationTab">🎤 Pronunciation</button>
+            <button onclick="showSection('progress')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="progressTab">📊 Progress</button>
         </div>
     </nav>
 
     <!-- Lessons Section -->
     <section id="lessons" class="container mx-auto px-6 section-content">
         <div class="glass-card p-8 mb-8">
-            <h2 class="text-2xl font-bold text-white mb-6">📚 Choose Your Lesson</h2>
+            <h2 class="text-3xl font-bold mb-6">📚 Choose Your Lesson</h2>
+            <p class="text-lg mb-8 opacity-80">Select a category to start your Mandarin learning journey</p>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('basics')">
-                    <h3 class="text-xl font-bold text-white mb-2">🌟 Basics</h3>
-                    <p class="text-white opacity-80">Essential words and phrases</p>
-                    <div class="mt-4 text-sm text-white opacity-60">20 words</div>
+                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('basics')">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-4">🌟</div>
+                        <h3 class="text-xl font-bold">Basics</h3>
+                    </div>
+                    <p class="opacity-80 mb-4">Essential words and phrases</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm opacity-60">20 words</span>
+                        <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded"></div>
+                    </div>
                 </div>
-                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('greetings')">
-                    <h3 class="text-xl font-bold text-white mb-2">👋 Greetings</h3>
-                    <p class="text-white opacity-80">Hello, goodbye, and more</p>
-                    <div class="mt-4 text-sm text-white opacity-60">15 phrases</div>
+                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('greetings')">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-4">👋</div>
+                        <h3 class="text-xl font-bold">Greetings</h3>
+                    </div>
+                    <p class="opacity-80 mb-4">Hello, goodbye, and more</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm opacity-60">15 phrases</span>
+                        <div class="w-12 h-1 bg-gradient-to-r from-green-500 to-blue-500 rounded"></div>
+                    </div>
                 </div>
-                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('numbers')">
-                    <h3 class="text-xl font-bold text-white mb-2">🔢 Numbers</h3>
-                    <p class="text-white opacity-80">Count from 1 to 100</p>
-                    <div class="mt-4 text-sm text-white opacity-60">20 numbers</div>
+                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('numbers')">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-4">🔢</div>
+                        <h3 class="text-xl font-bold">Numbers</h3>
+                    </div>
+                    <p class="opacity-80 mb-4">Count from 1 to 100</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm opacity-60">20 numbers</span>
+                        <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
+                    </div>
                 </div>
-                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('family')">
-                    <h3 class="text-xl font-bold text-white mb-2">👨‍👩‍👧‍👦 Family</h3>
-                    <p class="text-white opacity-80">Family relationships</p>
-                    <div class="mt-4 text-sm text-white opacity-60">12 words</div>
+                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('family')">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-4">👨‍👩‍👧‍👦</div>
+                        <h3 class="text-xl font-bold">Family</h3>
+                    </div>
+                    <p class="opacity-80 mb-4">Family relationships</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm opacity-60">12 words</span>
+                        <div class="w-12 h-1 bg-gradient-to-r from-red-500 to-orange-500 rounded"></div>
+                    </div>
                 </div>
-                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('food')">
-                    <h3 class="text-xl font-bold text-white mb-2">🍜 Food</h3>
-                    <p class="text-white opacity-80">Common foods and drinks</p>
-                    <div class="mt-4 text-sm text-white opacity-60">18 words</div>
+                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('food')">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-4">🍜</div>
+                        <h3 class="text-xl font-bold">Food</h3>
+                    </div>
+                    <p class="opacity-80 mb-4">Common foods and drinks</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm opacity-60">18 words</span>
+                        <div class="w-12 h-1 bg-gradient-to-r from-yellow-500 to-orange-500 rounded"></div>
+                    </div>
                 </div>
-                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('business')">
-                    <h3 class="text-xl font-bold text-white mb-2">💼 Business</h3>
-                    <p class="text-white opacity-80">Professional vocabulary</p>
-                    <div class="mt-4 text-sm text-white opacity-60">25 phrases</div>
+                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('business')">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-4">💼</div>
+                        <h3 class="text-xl font-bold">Business</h3>
+                    </div>
+                    <p class="opacity-80 mb-4">Professional vocabulary</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm opacity-60">25 phrases</span>
+                        <div class="w-12 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -342,9 +659,9 @@
             
             // Update active tab
             document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('bg-white', 'bg-opacity-30');
+                btn.classList.remove('active');
             });
-            document.getElementById(sectionName + 'Tab').classList.add('bg-white', 'bg-opacity-30');
+            document.getElementById(sectionName + 'Tab').classList.add('active');
             
             if (sectionName === 'progress') {
                 updateProgressDisplay();
@@ -470,7 +787,9 @@
 
         // Update total score display
         function updateTotalScore() {
-            document.getElementById('totalScore').textContent = `${userProgress.totalScore} / ${userProgress.wordsLearned}`;
+            const percentage = userProgress.wordsLearned > 0 ? Math.round((userProgress.totalScore / userProgress.wordsLearned) * 100) : 0;
+            document.getElementById('totalScore').textContent = userProgress.totalScore;
+            document.getElementById('averageScore').textContent = percentage + '%';
         }
 
         // Pronunciation functions
@@ -800,15 +1119,20 @@
                 const progressDiv = document.createElement('div');
                 progressDiv.innerHTML = `
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-white font-semibold capitalize">${lessonName}</span>
-                        <span class="text-white opacity-75">${completed}/${total}</span>
+                        <span class="font-semibold capitalize">${lessonName}</span>
+                        <span class="opacity-75">${completed}/${total}</span>
                     </div>
                     <div class="bg-white bg-opacity-20 rounded-full h-3">
-                        <div class="bg-green-500 h-3 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                        <div class="progress-bar h-3 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
                     </div>
                 `;
                 progressContainer.appendChild(progressDiv);
             });
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('totalScore').textContent = userProgress.totalScore;
+            document.getElementById('streakDays').textContent = '3'; // Simulated streak
         }
 
         // URL-based progress system for GitHub Pages
@@ -930,7 +1254,9 @@
             
             showSection('lessons');
             updateTotalScore();
+            updateStatsDisplay(); // Update the header stats
             loadApiKey(); // Load saved API key (auto-populates with Steve's key)
+            loadTheme(); // Load saved theme
             
             // Auto-test API connection with Steve's key
             if (ELEVENLABS_API_KEY && ELEVENLABS_API_KEY !== 'YOUR_ELEVENLABS_API_KEY') {
