@@ -182,14 +182,191 @@
             box-shadow: 0 6px 30px var(--glass-shadow);
         }
 
-        /* Mobile Optimizations */
+        /* Mobile-First Responsive Design */
         @media (max-width: 768px) {
+            /* Typography scaling */
+            .character-display {
+                font-size: 3rem;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            /* Container padding */
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            /* Header adjustments */
+            header {
+                padding: 1.5rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            /* Navigation - mobile bottom bar */
+            nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--bg-card);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid var(--border-color);
+                padding: 0.5rem;
+                margin-bottom: 0;
+                z-index: 1000;
+                box-shadow: 0 -4px 20px var(--shadow-color);
+            }
+            
+            nav .flex {
+                justify-content: space-around;
+                align-items: center;
+            }
+            
+            .nav-tab {
+                flex: 1;
+                padding: 0.75rem 0.5rem;
+                margin: 0 0.25rem;
+                font-size: 0.75rem;
+                border-radius: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.25rem;
+            }
+            
+            .nav-tab span {
+                font-size: 1.25rem;
+            }
+            
+            /* Content padding for bottom nav */
+            .section-content {
+                padding-bottom: 5rem;
+            }
+            
+            /* Lesson cards - mobile optimized */
+            .lesson-card {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .lesson-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            /* Practice section mobile */
+            #practice .glass-card {
+                padding: 1.5rem;
+                margin: 0 0.5rem;
+            }
+            
+            #questionCard {
+                padding: 1.5rem;
+                margin: 0 -0.5rem;
+            }
+            
+            #multipleChoice button {
+                padding: 1rem;
+                font-size: 1rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            /* Pronunciation section mobile */
+            #pronunciation .glass-card {
+                padding: 1.5rem;
+                margin: 0 0.5rem;
+            }
+            
+            #pronunciation .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            
+            #pronunciation button {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Progress section mobile */
+            #progress .grid {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 1rem;
+            }
+            
+            /* API key input mobile */
+            .modern-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Theme toggle mobile optimization */
             .theme-toggle {
-                top: 16px;
-                right: 16px;
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                top: 1rem;
+                right: 1rem;
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+            
+            /* Mobile-specific utilities */
+            .mobile-padding {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .mobile-margin {
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+            }
+            
+            /* Bottom navigation for mobile */
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--bg-card);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid var(--border-color);
+                padding: 0.75rem 1rem;
+                z-index: 1000;
+                box-shadow: 0 -4px 20px var(--shadow-color);
+            }
+            
+            .bottom-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem;
+                border-radius: 12px;
+                transition: all 0.2s ease;
+                font-size: 0.75rem;
+            }
+            
+            .bottom-nav-item.active {
+                background: var(--accent-primary);
+                color: white;
+            }
+            
+            /* Content padding for bottom nav */
+            .mobile-content {
+                padding-bottom: 5rem;
+            }
+            
+            /* Responsive text */
+            .text-responsive {
+                font-size: clamp(0.875rem, 2.5vw, 1rem);
+            }
+            
+            /* Touch-friendly targets */
+            .touch-target {
+                min-height: 44px;
+                min-width: 44px;
             }
         }
 
@@ -315,117 +492,153 @@
     </style>
 </head>
 <body class="gradient-bg min-h-screen">
-    <!-- Header -->
-    <header class="gradient-bg text-white p-8">
-        <div class="container mx-auto px-6">
+    <!-- Header - Mobile Optimized -->
+    <header class="gradient-bg text-white p-6 md:p-8">
+        <div class="container mx-auto px-4 md:px-6">
             <div class="text-center">
                 <div class="float mb-4">
-                    <h1 class="text-5xl md:text-6xl font-bold mb-2">🇨🇳 MandarinPro</h1>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-2">🇨🇳 MandarinPro</h1>
                 </div>
-                <p class="text-xl md:text-2xl mb-4 opacity-90">Interactive Mandarin Learning</p>
-                <p class="text-lg opacity-80 max-w-2xl mx-auto">Master Chinese with AI-powered lessons, real pronunciation, and progress tracking</p>
+                <p class="text-lg md:text-xl mb-3 opacity-90">Interactive Mandarin Learning</p>
+                <p class="text-sm md:text-lg opacity-80 max-w-2xl mx-auto">Master Chinese with AI-powered lessons, real pronunciation, and progress tracking</p>
                 
-                <!-- Quick Stats -->
-                <div class="flex justify-center items-center space-x-8 mt-6">
+                <!-- Quick Stats - Mobile Optimized -->
+                <div class="flex justify-center items-center space-x-4 md:space-x-8 mt-4 md:mt-6">
                     <div class="text-center">
-                        <div class="text-2xl font-bold" id="totalScore">0</div>
-                        <div class="text-sm opacity-75">Words Mastered</div>
+                        <div class="text-xl md:text-2xl font-bold" id="totalScore">0</div>
+                        <div class="text-xs md:text-sm opacity-75">Words Mastered</div>
                     </div>
-                    <div class="w-px h-8 bg-white opacity-30"></div>
+                    <div class="w-px h-6 md:h-8 bg-white opacity-30"></div>
                     <div class="text-center">
-                        <div class="text-2xl font-bold" id="streakDays">0</div>
-                        <div class="text-sm opacity-75">Day Streak</div>
+                        <div class="text-xl md:text-2xl font-bold" id="streakDays">0</div>
+                        <div class="text-xs md:text-sm opacity-75">Day Streak</div>
                     </div>
-                    <div class="w-px h-8 bg-white opacity-30"></div>
+                    <div class="w-px h-6 md:h-8 bg-white opacity-30"></div>
                     <div class="text-center">
-                        <div class="text-2xl font-bold">6</div>
-                        <div class="text-sm opacity-75">Lessons</div>
+                        <div class="text-xl md:text-2xl font-bold">6</div>
+                        <div class="text-xs md:text-sm opacity-75">Lessons</div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="container mx-auto px-6 mb-8">
+    <!-- Mobile Bottom Navigation -->
+    <nav class="container mx-auto px-4 md:px-6 mb-8 md:hidden">
+        <div class="fixed bottom-0 left-0 right-0 bg-white bg-opacity-90 backdrop-blur-lg border-t border-gray-200 px-4 py-2">
+            <div class="flex justify-around items-center">
+                <button onclick="showSection('lessons')" class="nav-tab flex-1 px-2 py-3 text-center" id="lessonsTabMobile">
+                    <div class="text-lg">📚</div>
+                    <div class="text-xs">Lessons</div>
+                </button>
+                <button onclick="showSection('practice')" class="nav-tab flex-1 px-2 py-3 text-center" id="practiceTabMobile">
+                    <div class="text-lg">🎯</div>
+                    <div class="text-xs">Practice</div>
+                </button>
+                <button onclick="showSection('pronunciation')" class="nav-tab flex-1 px-2 py-3 text-center" id="pronunciationTabMobile">
+                    <div class="text-lg">🎤</div>
+                    <div class="text-xs">Pronunciation</div>
+                </button>
+                <button onclick="showSection('progress')" class="nav-tab flex-1 px-2 py-3 text-center" id="progressTabMobile">
+                    <div class="text-lg">📊</div>
+                    <div class="text-xs">Progress</div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Desktop Navigation -->
+    <nav class="container mx-auto px-6 mb-8 hidden md:flex">
         <div class="flex space-x-4 justify-center">
-            <button onclick="showSection('lessons')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="lessonsTab">📚 Lessons</button>
-            <button onclick="showSection('practice')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="practiceTab">🎯 Practice</button>
-            <button onclick="showSection('pronunciation')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="pronunciationTab">🎤 Pronunciation</button>
-            <button onclick="showSection('progress')" class="nav-tab px-6 py-3 font-semibold transition duration-300" id="progressTab">📊 Progress</button>
+            <button onclick="showSection('lessons')" class="nav-tab px-6 py-3 font-semibold transition duration-300 flex flex-col items-center gap-1" id="lessonsTab">
+                <span>📚</span>
+                <span class="text-xs">Lessons</span>
+            </button>
+            <button onclick="showSection('practice')" class="nav-tab px-6 py-3 font-semibold transition duration-300 flex flex-col items-center gap-1" id="practiceTab">
+                <span>🎯</span>
+                <span class="text-xs">Practice</span>
+            </button>
+            <button onclick="showSection('pronunciation')" class="nav-tab px-6 py-3 font-semibold transition duration-300 flex flex-col items-center gap-1" id="pronunciationTab">
+                <span>🎤</span>
+                <span class="text-xs">Pronunciation</span>
+            </button>
+            <button onclick="showSection('progress')" class="nav-tab px-6 py-3 font-semibold transition duration-300 flex flex-col items-center gap-1" id="progressTab">
+                <span>📊</span>
+                <span class="text-xs">Progress</span>
+            </button>
         </div>
     </nav>
 
     <!-- Lessons Section -->
-    <section id="lessons" class="container mx-auto px-6 section-content">
-        <div class="glass-card p-8 mb-8">
-            <h2 class="text-3xl font-bold mb-6">📚 Choose Your Lesson</h2>
-            <p class="text-lg mb-8 opacity-80">Select a category to start your Mandarin learning journey</p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('basics')">
-                    <div class="flex items-center mb-4">
-                        <div class="text-3xl mr-4">🌟</div>
-                        <h3 class="text-xl font-bold">Basics</h3>
+    <section id="lessons" class="container mx-auto px-4 md:px-6 section-content mobile-content">
+        <div class="glass-card p-4 md:p-8 mb-6 md:mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6">📚 Choose Your Lesson</h2>
+            <p class="text-sm md:text-lg mb-4 md:mb-8 opacity-80">Select a category to start your Mandarin learning journey</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+                <div class="lesson-card p-3 md:p-6 cursor-pointer" onclick="startLesson('basics')">
+                    <div class="flex items-center mb-3 md:mb-4">
+                        <div class="text-2xl md:text-3xl mr-3 md:mr-4">🌟</div>
+                        <h3 class="text-lg md:text-xl font-bold">Basics</h3>
                     </div>
-                    <p class="opacity-80 mb-4">Essential words and phrases</p>
+                    <p class="text-sm md:text-base opacity-80 mb-3 md:mb-4">Essential words and phrases</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm opacity-60">20 words</span>
-                        <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded"></div>
+                        <span class="text-xs md:text-sm opacity-60">20 words</span>
+                        <div class="w-8 md:w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded"></div>
                     </div>
                 </div>
-                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('greetings')">
-                    <div class="flex items-center mb-4">
-                        <div class="text-3xl mr-4">👋</div>
-                        <h3 class="text-xl font-bold">Greetings</h3>
+                <div class="lesson-card p-3 md:p-6 cursor-pointer" onclick="startLesson('greetings')">
+                    <div class="flex items-center mb-3 md:mb-4">
+                        <div class="text-2xl md:text-3xl mr-3 md:mr-4">👋</div>
+                        <h3 class="text-lg md:text-xl font-bold">Greetings</h3>
                     </div>
-                    <p class="opacity-80 mb-4">Hello, goodbye, and more</p>
+                    <p class="text-sm md:text-base opacity-80 mb-3 md:mb-4">Hello, goodbye, and more</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm opacity-60">15 phrases</span>
-                        <div class="w-12 h-1 bg-gradient-to-r from-green-500 to-blue-500 rounded"></div>
+                        <span class="text-xs md:text-sm opacity-60">15 phrases</span>
+                        <div class="w-8 md:w-12 h-1 bg-gradient-to-r from-green-500 to-blue-500 rounded"></div>
                     </div>
                 </div>
-                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('numbers')">
-                    <div class="flex items-center mb-4">
-                        <div class="text-3xl mr-4">🔢</div>
-                        <h3 class="text-xl font-bold">Numbers</h3>
+                <div class="lesson-card p-3 md:p-6 cursor-pointer" onclick="startLesson('numbers')">
+                    <div class="flex items-center mb-3 md:mb-4">
+                        <div class="text-2xl md:text-3xl mr-3 md:mr-4">🔢</div>
+                        <h3 class="text-lg md:text-xl font-bold">Numbers</h3>
                     </div>
-                    <p class="opacity-80 mb-4">Count from 1 to 100</p>
+                    <p class="text-sm md:text-base opacity-80 mb-3 md:mb-4">Count from 1 to 100</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm opacity-60">20 numbers</span>
-                        <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
+                        <span class="text-xs md:text-sm opacity-60">20 numbers</span>
+                        <div class="w-8 md:w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
                     </div>
                 </div>
-                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('family')">
-                    <div class="flex items-center mb-4">
-                        <div class="text-3xl mr-4">👨‍👩‍👧‍👦</div>
-                        <h3 class="text-xl font-bold">Family</h3>
+                <div class="lesson-card p-3 md:p-6 cursor-pointer" onclick="startLesson('family')">
+                    <div class="flex items-center mb-3 md:mb-4">
+                        <div class="text-2xl md:text-3xl mr-3 md:mr-4">👨‍👩‍👧‍👦</div>
+                        <h3 class="text-lg md:text-xl font-bold">Family</h3>
                     </div>
-                    <p class="opacity-80 mb-4">Family relationships</p>
+                    <p class="text-sm md:text-base opacity-80 mb-3 md:mb-4">Family relationships</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm opacity-60">12 words</span>
-                        <div class="w-12 h-1 bg-gradient-to-r from-red-500 to-orange-500 rounded"></div>
+                        <span class="text-xs md:text-sm opacity-60">12 words</span>
+                        <div class="w-8 md:w-12 h-1 bg-gradient-to-r from-red-500 to-orange-500 rounded"></div>
                     </div>
                 </div>
-                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('food')">
-                    <div class="flex items-center mb-4">
-                        <div class="text-3xl mr-4">🍜</div>
-                        <h3 class="text-xl font-bold">Food</h3>
+                <div class="lesson-card p-3 md:p-6 cursor-pointer" onclick="startLesson('food')">
+                    <div class="flex items-center mb-3 md:mb-4">
+                        <div class="text-2xl md:text-3xl mr-3 md:mr-4">🍜</div>
+                        <h3 class="text-lg md:text-xl font-bold">Food</h3>
                     </div>
-                    <p class="opacity-80 mb-4">Common foods and drinks</p>
+                    <p class="text-sm md:text-base opacity-80 mb-3 md:mb-4">Common foods and drinks</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm opacity-60">18 words</span>
-                        <div class="w-12 h-1 bg-gradient-to-r from-yellow-500 to-orange-500 rounded"></div>
+                        <span class="text-xs md:text-sm opacity-60">18 words</span>
+                        <div class="w-8 md:w-12 h-1 bg-gradient-to-r from-yellow-500 to-orange-500 rounded"></div>
                     </div>
                 </div>
-                <div class="lesson-card p-6 cursor-pointer" onclick="startLesson('business')">
-                    <div class="flex items-center mb-4">
-                        <div class="text-3xl mr-4">💼</div>
-                        <h3 class="text-xl font-bold">Business</h3>
+                <div class="lesson-card p-3 md:p-6 cursor-pointer" onclick="startLesson('business')">
+                    <div class="flex items-center mb-3 md:mb-4">
+                        <div class="text-2xl md:text-3xl mr-3 md:mr-4">💼</div>
+                        <h3 class="text-lg md:text-xl font-bold">Business</h3>
                     </div>
-                    <p class="opacity-80 mb-4">Professional vocabulary</p>
+                    <p class="text-sm md:text-base opacity-80 mb-3 md:mb-4">Professional vocabulary</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm opacity-60">25 phrases</span>
-                        <div class="w-12 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded"></div>
+                        <span class="text-xs md:text-sm opacity-60">25 phrases</span>
+                        <div class="w-8 md:w-12 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded"></div>
                     </div>
                 </div>
             </div>
@@ -433,7 +646,7 @@
     </section>
 
     <!-- Practice Section -->
-    <section id="practice" class="container mx-auto px-6 section-content" style="display: none;">
+    <section id="practice" class="container mx-auto px-6 section-content mobile-content" style="display: none;">
         <div class="glass-card p-8 text-center">
             <div id="practiceContent">
                 <h2 class="text-2xl font-bold text-white mb-6">🎯 Practice Mode</h2>
@@ -472,7 +685,7 @@
     </section>
 
     <!-- Pronunciation Section -->
-    <section id="pronunciation" class="container mx-auto px-6 section-content" style="display: none;">
+    <section id="pronunciation" class="container mx-auto px-6 section-content mobile-content" style="display: none;">
         <div class="glass-card p-8 text-center">
             <h2 class="text-2xl font-bold text-white mb-6">🎤 Pronunciation Practice</h2>
             
@@ -540,7 +753,7 @@
     </section>
 
     <!-- Progress Section -->
-    <section id="progress" class="container mx-auto px-6 section-content" style="display: none;">
+    <section id="progress" class="container mx-auto px-6 section-content mobile-content" style="display: none;">
         <div class="glass-card p-8">
             <h2 class="text-2xl font-bold text-white mb-6">📊 Your Progress</h2>
             
