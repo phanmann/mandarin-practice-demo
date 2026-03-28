@@ -3,226 +3,511 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MandarinPro - Professional Mandarin Learning Platform</title>
+    <title>MandarinPro - Interactive Practice</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        .correct { 
+            background-color: #10b981 !important; 
+            color: white; 
+        }
+        .incorrect { 
+            background-color: #ef4444 !important; 
+            color: white; 
+        }
+        .character-display {
+            font-size: 4rem;
+            font-family: 'SimSun', '宋体', serif;
+        }
+        .pinyin-display {
+            font-size: 1.5rem;
+            color: #6366f1;
+            font-weight: 600;
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .lesson-card {
+            transition: all 0.3s ease;
+        }
+        .lesson-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="gradient-bg min-h-screen">
     <!-- Header -->
-    <header class="gradient-bg text-white">
-        <div class="container mx-auto px-6 py-16">
-            <div class="text-center">
-                <h1 class="text-5xl font-bold mb-4">MandarinPro</h1>
-                <p class="text-xl mb-8">The Professional's Path to Mandarin Mastery</p>
-                <p class="text-lg opacity-90 max-w-2xl mx-auto">
-                    AI-powered language learning platform designed for young professionals in multinational corporations
-                </p>
-                <div class="mt-8">
-                    <button class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 mr-4">
-                        Start Learning
-                    </button>
-                    <button class="border border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition duration-300">
-                        Watch Demo
-                    </button>
-                </div>
+    <header class="text-white p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">🇨🇳 MandarinPro Practice</h1>
+                <p class="text-lg opacity-90">Interactive Mandarin Learning</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm opacity-75">Progress</div>
+                <div class="text-xl font-bold" id="totalScore">0 / 0</div>
             </div>
         </div>
     </header>
 
-    <!-- Features Section -->
-    <section class="py-16">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12">Enterprise-Grade Features</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-2xl mb-4">🤖</div>
-                    <h3 class="text-xl font-semibold mb-3">AI-Powered Learning</h3>
-                    <p class="text-gray-600">Real-time pronunciation feedback and adaptive learning algorithms personalized to your progress</p>
+    <!-- Navigation -->
+    <nav class="container mx-auto px-6 mb-8">
+        <div class="flex space-x-4">
+            <button onclick="showSection('lessons')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="lessonsTab">📚 Lessons</button>
+            <button onclick="showSection('practice')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="practiceTab">🎯 Practice</button>
+            <button onclick="showSection('pronunciation')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="pronunciationTab">🎤 Pronunciation</button>
+            <button onclick="showSection('progress')" class="glass-card px-6 py-3 text-white font-semibold hover:bg-white hover:bg-opacity-20 transition duration-300" id="progressTab">📊 Progress</button>
+        </div>
+    </nav>
+
+    <!-- Lessons Section -->
+    <section id="lessons" class="container mx-auto px-6 section-content">
+        <div class="glass-card p-8 mb-8">
+            <h2 class="text-2xl font-bold text-white mb-6">📚 Choose Your Lesson</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('basics')">
+                    <h3 class="text-xl font-bold text-white mb-2">🌟 Basics</h3>
+                    <p class="text-white opacity-80">Essential words and phrases</p>
+                    <div class="mt-4 text-sm text-white opacity-60">20 words</div>
                 </div>
-                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-2xl mb-4">🏢</div>
-                    <h3 class="text-xl font-semibold mb-3">Corporate Ready</h3>
-                    <p class="text-gray-600">Multi-tenant architecture with SSO integration and enterprise-grade security</p>
+                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('greetings')">
+                    <h3 class="text-xl font-bold text-white mb-2">👋 Greetings</h3>
+                    <p class="text-white opacity-80">Hello, goodbye, and more</p>
+                    <div class="mt-4 text-sm text-white opacity-60">15 phrases</div>
                 </div>
-                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-2xl mb-4">📱</div>
-                    <h3 class="text-xl font-semibold mb-3">Progressive Web App</h3>
-                    <p class="text-gray-600">Mobile-first design with offline capabilities and native app-like experience</p>
+                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('numbers')">
+                    <h3 class="text-xl font-bold text-white mb-2">🔢 Numbers</h3>
+                    <p class="text-white opacity-80">Count from 1 to 100</p>
+                    <div class="mt-4 text-sm text-white opacity-60">20 numbers</div>
                 </div>
-                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-2xl mb-4">⚡</div>
-                    <h3 class="text-xl font-semibold mb-3">Real-time Features</h3>
-                    <p class="text-gray-600">WebSocket integration for live pronunciation coaching and interactive lessons</p>
+                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('family')">
+                    <h3 class="text-xl font-bold text-white mb-2">👨‍👩‍👧‍👦 Family</h3>
+                    <p class="text-white opacity-80">Family relationships</p>
+                    <div class="mt-4 text-sm text-white opacity-60">12 words</div>
                 </div>
-                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-2xl mb-4">📊</div>
-                    <h3 class="text-xl font-semibold mb-3">Advanced Analytics</h3>
-                    <p class="text-gray-600">Detailed progress tracking with spaced repetition and performance insights</p>
+                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('food')">
+                    <h3 class="text-xl font-bold text-white mb-2">🍜 Food</h3>
+                    <p class="text-white opacity-80">Common foods and drinks</p>
+                    <div class="mt-4 text-sm text-white opacity-60">18 words</div>
                 </div>
-                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-2xl mb-4">🌐</div>
-                    <h3 class="text-xl font-semibold mb-3">Multi-tenant</h3>
-                    <p class="text-gray-600">Corporate account management with team progress tracking and admin dashboards</p>
+                <div class="lesson-card bg-white bg-opacity-10 p-6 rounded-lg cursor-pointer" onclick="startLesson('business')">
+                    <h3 class="text-xl font-bold text-white mb-2">💼 Business</h3>
+                    <p class="text-white opacity-80">Professional vocabulary</p>
+                    <div class="mt-4 text-sm text-white opacity-60">25 phrases</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section class="bg-white py-16">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4">See It In Action</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Experience our AI-powered learning platform designed specifically for business professionals
-                </p>
+    <!-- Practice Section -->
+    <section id="practice" class="container mx-auto px-6 section-content" style="display: none;">
+        <div class="glass-card p-8 text-center">
+            <div id="practiceContent">
+                <h2 class="text-2xl font-bold text-white mb-6">🎯 Practice Mode</h2>
+                <div class="mb-6">
+                    <div class="bg-white bg-opacity-20 rounded-lg p-2 mb-4">
+                        <div class="progress-bar bg-green-500 h-2 rounded" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <div class="text-white text-sm" id="progressText">Question 0 of 0</div>
+                </div>
+                
+                <div id="questionCard" class="bg-white bg-opacity-10 rounded-lg p-8 mb-8" style="display: none;">
+                    <div class="character-display text-white mb-4" id="chineseCharacter"></div>
+                    <div class="pinyin-display mb-6" id="pinyinDisplay"></div>
+                    <div class="text-white text-lg mb-8" id="questionText"></div>
+                    
+                    <div id="multipleChoice" class="space-y-3">
+                        <!-- Multiple choice options will be generated here -->
+                    </div>
+                    
+                    <div id="feedback" class="mt-6 text-lg font-semibold" style="display: none;"></div>
+                    <button id="nextButton" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold" onclick="nextQuestion()" style="display: none;">Next →</button>
+                </div>
+                
+                <div id="practiceComplete" class="text-center" style="display: none;">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Practice Complete!</h3>
+                    <div class="text-white text-lg mb-6" id="finalScore"></div>
+                    <button onclick="showSection('lessons')" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold">Choose Another Lesson</button>
+                </div>
+                
+                <div class="text-white opacity-75">
+                    <p>Select a lesson from the Lessons tab to start practicing!</p>
+                </div>
             </div>
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-gray-100 rounded-lg p-8 text-center">
-                    <div class="text-6xl mb-4">🎯</div>
-                    <h3 class="text-xl font-semibold mb-3">Interactive Demo</h3>
-                    <p class="text-gray-600 mb-6">
-                        Try our pronunciation coaching and adaptive learning features
-                    </p>
-                    <div class="bg-white rounded-lg p-6 shadow-md">
-                        <div class="text-left">
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Practice Pronunciation</label>
-                                <div class="flex items-center space-x-4">
-                                    <span class="text-2xl">你好</span>
-                                    <span class="text-lg text-gray-500">nǐ hǎo</span>
-                                    <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
-                                        🎤 Record
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">AI Feedback</label>
-                                <div class="bg-green-50 border border-green-200 rounded p-3">
-                                    <p class="text-green-800">✅ Excellent pronunciation! Your tone accuracy: 95%</p>
-                                </div>
-                            </div>
-                        </div>
+        </div>
+    </section>
+
+    <!-- Pronunciation Section -->
+    <section id="pronunciation" class="container mx-auto px-6 section-content" style="display: none;">
+        <div class="glass-card p-8 text-center">
+            <h2 class="text-2xl font-bold text-white mb-6">🎤 Pronunciation Practice</h2>
+            
+            <div class="bg-white bg-opacity-10 rounded-lg p-8 mb-8">
+                <div class="character-display text-white mb-4" id="pronCharacter">你好</div>
+                <div class="pinyin-display mb-6" id="pronPinyin">nǐ hǎo</div>
+                <div class="text-white text-lg mb-8" id="pronMeaning">Hello</div>
+                
+                <div class="space-y-4">
+                    <button id="playAudio" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold" onclick="playPronunciation()">🔊 Listen</button>
+                    <button id="recordBtn" class="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg font-semibold" onclick="toggleRecording()">🎤 Practice Speaking</button>
+                </div>
+                
+                <div id="recordingFeedback" class="mt-6 text-white" style="display: none;">
+                    <div class="bg-green-500 bg-opacity-20 border border-green-500 rounded p-4">
+                        <p>✅ Great pronunciation! Keep practicing!</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="py-16 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4">Professional Pricing</h2>
-                <p class="text-gray-600">Designed for individual professionals and corporate teams</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-white rounded-lg shadow-md p-8">
-                    <h3 class="text-xl font-semibold mb-4">Individual Professional</h3>
-                    <div class="text-3xl font-bold text-purple-600 mb-4">$19.99<span class="text-lg text-gray-500">/month</span></div>
-                    <ul class="space-y-3 mb-6">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>AI pronunciation coaching</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Adaptive learning engine</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Mobile PWA access</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Progress analytics</li>
-                    </ul>
-                    <button class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition duration-300">
-                        Start Free Trial
-                    </button>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-8 border-2 border-purple-600 relative">
-                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm">
-                        Most Popular
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4">Corporate Team</h3>
-                    <div class="text-3xl font-bold text-purple-600 mb-4">$15<span class="text-lg text-gray-500">/user/month</span></div>
-                    <ul class="space-y-3 mb-6">
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Everything in Individual</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Multi-tenant architecture</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>SSO integration</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Team analytics</li>
-                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>Admin dashboard</li>
-                    </ul>
-                    <button class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition duration-300">
-                        Contact Sales
-                    </button>
-                </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="setPronunciationWord('你好', 'nǐ hǎo', 'Hello')" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white p-4 rounded-lg transition">你好</button>
+                <button onclick="setPronunciationWord('谢谢', 'xièxie', 'Thank you')" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white p-4 rounded-lg transition">谢谢</button>
+                <button onclick="setPronunciationWord('再见', 'zàijiàn', 'Goodbye')" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white p-4 rounded-lg transition">再见</button>
+                <button onclick="setPronunciationWord('请问', 'qǐngwèn', 'Excuse me')" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white p-4 rounded-lg transition">请问</button>
+                <button onclick="setPronunciationWord('不好意思', 'bù hǎoyìsi', 'Sorry')" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white p-4 rounded-lg transition">不好意思</button>
+                <button onclick="setPronunciationWord('多少钱', 'duōshǎo qián', 'How much?')" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white p-4 rounded-lg transition">多少钱</button>
             </div>
         </div>
     </section>
 
-    <!-- Technical Specs -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4">Technical Specifications</h2>
-                <p class="text-gray-600">Enterprise-grade technology stack</p>
+    <!-- Progress Section -->
+    <section id="progress" class="container mx-auto px-6 section-content" style="display: none;">
+        <div class="glass-card p-8">
+            <h2 class="text-2xl font-bold text-white mb-6">📊 Your Progress</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white bg-opacity-10 rounded-lg p-6 text-center">
+                    <div class="text-3xl mb-2">🏆</div>
+                    <div class="text-2xl font-bold text-white" id="totalWordsLearned">0</div>
+                    <div class="text-white opacity-75">Words Learned</div>
+                </div>
+                <div class="bg-white bg-opacity-10 rounded-lg p-6 text-center">
+                    <div class="text-3xl mb-2">📈</div>
+                    <div class="text-2xl font-bold text-white" id="averageScore">0%</div>
+                    <div class="text-white opacity-75">Average Score</div>
+                </div>
+                <div class="bg-white bg-opacity-10 rounded-lg p-6 text-center">
+                    <div class="text-3xl mb-2">🔥</div>
+                    <div class="text-2xl font-bold text-white" id="streakDays">0</div>
+                    <div class="text-white opacity-75">Day Streak</div>
+                </div>
             </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="text-blue-600 text-3xl mb-3">⚛️</div>
-                    <h4 class="font-semibold mb-2">Next.js 14</h4>
-                    <p class="text-gray-600 text-sm">App Router, TypeScript</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-blue-600 text-3xl mb-3">🗄️</div>
-                    <h4 class="font-semibold mb-2">Database</h4>
-                    <p class="text-gray-600 text-sm">PostgreSQL, Prisma ORM</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-blue-600 text-3xl mb-3">🔐</div>
-                    <h4 class="font-semibold mb-2">Authentication</h4>
-                    <p class="text-gray-600 text-sm">NextAuth.js, SSO Ready</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-blue-600 text-3xl mb-3">☁️</div>
-                    <h4 class="font-semibold mb-2">Deployment</h4>
-                    <p class="text-gray-600 text-sm">Vercel, AWS, Docker</p>
+            
+            <div class="bg-white bg-opacity-10 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-white mb-4">Lesson Progress</h3>
+                <div id="lessonProgress" class="space-y-3">
+                    <!-- Progress bars will be generated here -->
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-6 text-center">
-            <h3 class="text-xl font-semibold mb-4">MandarinPro</h3>
-            <p class="text-gray-400 mb-4">Professional Mandarin learning for the modern workforce</p>
-            <div class="space-x-4">
-                <a href="#" class="text-gray-400 hover:text-white">GitHub Repository</a>
-                <a href="#" class="text-gray-400 hover:text-white">Documentation</a>
-                <a href="#" class="text-gray-400 hover:text-white">Contact</a>
-            </div>
-            <div class="mt-6 pt-6 border-t border-gray-700">
-                <p class="text-gray-500">© 2026 MandarinPro. Built with DevPod Squad.</p>
-            </div>
-        </div>
-    </footer>
 
     <script>
-        // Simple interactivity
-        document.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', function() {
-                if (this.textContent.includes('Record')) {
-                    this.textContent = '🎤 Recording...';
-                    this.style.backgroundColor = '#ef4444';
-                    setTimeout(() => {
-                        this.textContent = '🎤 Record';
-                        this.style.backgroundColor = '';
-                    }, 2000);
-                }
+        // Lesson data
+        const lessons = {
+            basics: [
+                {chinese: '你', pinyin: 'nǐ', english: 'you', options: ['you', 'I', 'he', 'she']},
+                {chinese: '我', pinyin: 'wǒ', english: 'I', options: ['I', 'you', 'we', 'they']},
+                {chinese: '好', pinyin: 'hǎo', english: 'good', options: ['good', 'bad', 'big', 'small']},
+                {chinese: '是', pinyin: 'shì', english: 'is/am/are', options: ['is/am/are', 'not', 'can', 'will']},
+                {chinese: '的', pinyin: 'de', english: 'possessive particle', options: ['possessive particle', 'question particle', 'past tense marker', 'plural marker']},
+                {chinese: '在', pinyin: 'zài', english: 'at/in', options: ['at/in', 'on', 'under', 'above']},
+                {chinese: '有', pinyin: 'yǒu', english: 'have', options: ['have', 'want', 'need', 'like']},
+                {chinese: '人', pinyin: 'rén', english: 'person', options: ['person', 'animal', 'thing', 'place']},
+                {chinese: '中国', pinyin: 'zhōngguó', english: 'China', options: ['China', 'Japan', 'Korea', 'America']},
+                {chinese: '什么', pinyin: 'shénme', english: 'what', options: ['what', 'where', 'when', 'who']}
+            ],
+            greetings: [
+                {chinese: '你好', pinyin: 'nǐ hǎo', english: 'hello', options: ['hello', 'goodbye', 'thank you', 'sorry']},
+                {chinese: '早上好', pinyin: 'zǎoshang hǎo', english: 'good morning', options: ['good morning', 'good evening', 'good afternoon', 'good night']},
+                {chinese: '晚安', pinyin: 'wǎn\'ān', english: 'good night', options: ['good night', 'good morning', 'hello', 'goodbye']},
+                {chinese: '再见', pinyin: 'zàijiàn', english: 'goodbye', options: ['goodbye', 'hello', 'see you later', 'good morning']},
+                {chinese: '谢谢', pinyin: 'xièxie', english: 'thank you', options: ['thank you', 'sorry', 'excuse me', 'hello']},
+                {chinese: '不客气', pinyin: 'bù kèqi', english: 'you\'re welcome', options: ['you\'re welcome', 'thank you', 'excuse me', 'sorry']},
+                {chinese: '对不起', pinyin: 'duìbuqǐ', english: 'sorry', options: ['sorry', 'thank you', 'excuse me', 'hello']},
+                {chinese: '请问', pinyin: 'qǐngwèn', english: 'excuse me (asking)', options: ['excuse me (asking)', 'sorry', 'thank you', 'hello']}
+            ],
+            numbers: [
+                {chinese: '一', pinyin: 'yī', english: 'one', options: ['one', 'two', 'three', 'four']},
+                {chinese: '二', pinyin: 'èr', english: 'two', options: ['two', 'one', 'three', 'five']},
+                {chinese: '三', pinyin: 'sān', english: 'three', options: ['three', 'two', 'four', 'six']},
+                {chinese: '四', pinyin: 'sì', english: 'four', options: ['four', 'three', 'five', 'seven']},
+                {chinese: '五', pinyin: 'wǔ', english: 'five', options: ['five', 'four', 'six', 'eight']},
+                {chinese: '六', pinyin: 'liù', english: 'six', options: ['six', 'five', 'seven', 'nine']},
+                {chinese: '七', pinyin: 'qī', english: 'seven', options: ['seven', 'six', 'eight', 'ten']},
+                {chinese: '八', pinyin: 'bā', english: 'eight', options: ['eight', 'seven', 'nine', 'ten']},
+                {chinese: '九', pinyin: 'jiǔ', english: 'nine', options: ['nine', 'eight', 'ten', 'eleven']},
+                {chinese: '十', pinyin: 'shí', english: 'ten', options: ['ten', 'nine', 'eleven', 'twelve']}
+            ],
+            family: [
+                {chinese: '爸爸', pinyin: 'bàba', english: 'father', options: ['father', 'mother', 'brother', 'sister']},
+                {chinese: '妈妈', pinyin: 'māma', english: 'mother', options: ['mother', 'father', 'aunt', 'uncle']},
+                {chinese: '哥哥', pinyin: 'gēge', english: 'older brother', options: ['older brother', 'younger brother', 'father', 'uncle']},
+                {chinese: '妹妹', pinyin: 'mèimei', english: 'younger sister', options: ['younger sister', 'older sister', 'mother', 'aunt']},
+                {chinese: '儿子', pinyin: 'érzi', english: 'son', options: ['son', 'daughter', 'father', 'mother']},
+                {chinese: '女儿', pinyin: 'nǚ\'ér', english: 'daughter', options: ['daughter', 'son', 'mother', 'sister']}
+            ],
+            food: [
+                {chinese: '饭', pinyin: 'fàn', english: 'rice/food', options: ['rice/food', 'water', 'tea', 'coffee']},
+                {chinese: '水', pinyin: 'shuǐ', english: 'water', options: ['water', 'milk', 'juice', 'tea']},
+                {chinese: '茶', pinyin: 'chá', english: 'tea', options: ['tea', 'coffee', 'water', 'milk']},
+                {chinese: '牛奶', pinyin: 'niúnǎi', english: 'milk', options: ['milk', 'water', 'juice', 'coffee']},
+                {chinese: '面条', pinyin: 'miàntiáo', english: 'noodles', options: ['noodles', 'rice', 'bread', 'soup']},
+                {chinese: '鸡肉', pinyin: 'jīròu', english: 'chicken', options: ['chicken', 'beef', 'pork', 'fish']}
+            ],
+            business: [
+                {chinese: '公司', pinyin: 'gōngsī', english: 'company', options: ['company', 'office', 'factory', 'store']},
+                {chinese: '老板', pinyin: 'lǎobǎn', english: 'boss', options: ['boss', 'employee', 'customer', 'partner']},
+                {chinese: '会议', pinyin: 'huìyì', english: 'meeting', options: ['meeting', 'presentation', 'interview', 'conference']},
+                {chinese: '项目', pinyin: 'xiàngmù', english: 'project', options: ['project', 'task', 'job', 'work']},
+                {chinese: '合作', pinyin: 'hézuò', english: 'cooperation', options: ['cooperation', 'competition', 'negotiation', 'agreement']}
+            ]
+        };
+
+        // State management
+        let currentLesson = [];
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let isRecording = false;
+        let userProgress = JSON.parse(localStorage.getItem('mandarinProgress')) || {
+            completedLessons: {},
+            totalScore: 0,
+            wordsLearned: 0
+        };
+
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
             });
+            document.getElementById(sectionName).style.display = 'block';
+            
+            // Update active tab
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-white', 'bg-opacity-30');
+            });
+            document.getElementById(sectionName + 'Tab').classList.add('bg-white', 'bg-opacity-30');
+            
+            if (sectionName === 'progress') {
+                updateProgressDisplay();
+            }
+        }
+
+        // Start lesson
+        function startLesson(lessonName) {
+            currentLesson = [...lessons[lessonName]];
+            shuffleArray(currentLesson);
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            
+            showSection('practice');
+            document.getElementById('practiceComplete').style.display = 'none';
+            document.querySelector('#practiceContent .text-white.opacity-75').style.display = 'none';
+            document.getElementById('questionCard').style.display = 'block';
+            
+            updateProgressBar();
+            loadQuestion();
+        }
+
+        // Load current question
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentLesson.length) {
+                completePractice();
+                return;
+            }
+            
+            const question = currentLesson[currentQuestionIndex];
+            document.getElementById('chineseCharacter').textContent = question.chinese;
+            document.getElementById('pinyinDisplay').textContent = question.pinyin;
+            document.getElementById('questionText').textContent = 'What does this mean?';
+            
+            // Generate multiple choice options
+            const shuffledOptions = [...question.options];
+            shuffleArray(shuffledOptions);
+            
+            const multipleChoice = document.getElementById('multipleChoice');
+            multipleChoice.innerHTML = '';
+            
+            shuffledOptions.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-4 rounded-lg font-semibold transition duration-300';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(option, question.english, button);
+                multipleChoice.appendChild(button);
+            });
+            
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('nextButton').style.display = 'none';
+            
+            updateProgressBar();
+        }
+
+        // Handle answer selection
+        function selectAnswer(selectedAnswer, correctAnswer, buttonElement) {
+            const buttons = document.querySelectorAll('#multipleChoice button');
+            buttons.forEach(btn => btn.disabled = true);
+            
+            const feedback = document.getElementById('feedback');
+            
+            if (selectedAnswer === correctAnswer) {
+                buttonElement.classList.add('correct');
+                feedback.textContent = '✅ Correct!';
+                feedback.className = 'mt-6 text-lg font-semibold text-green-400';
+                correctAnswers++;
+            } else {
+                buttonElement.classList.add('incorrect');
+                // Highlight correct answer
+                buttons.forEach(btn => {
+                    if (btn.textContent === correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+                feedback.textContent = `❌ Incorrect. The correct answer is: ${correctAnswer}`;
+                feedback.className = 'mt-6 text-lg font-semibold text-red-400';
+            }
+            
+            feedback.style.display = 'block';
+            document.getElementById('nextButton').style.display = 'block';
+        }
+
+        // Next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Re-enable buttons and remove styling
+            const buttons = document.querySelectorAll('#multipleChoice button');
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('correct', 'incorrect');
+            });
+            
+            loadQuestion();
+        }
+
+        // Complete practice session
+        function completePractice() {
+            const percentage = Math.round((correctAnswers / currentLesson.length) * 100);
+            
+            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('practiceComplete').style.display = 'block';
+            document.getElementById('finalScore').textContent = `You got ${correctAnswers} out of ${currentLesson.length} correct (${percentage}%)`;
+            
+            // Update progress
+            userProgress.totalScore += correctAnswers;
+            userProgress.wordsLearned += currentLesson.length;
+            localStorage.setItem('mandarinProgress', JSON.stringify(userProgress));
+            
+            updateTotalScore();
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const percentage = (currentQuestionIndex / currentLesson.length) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `Question ${currentQuestionIndex + 1} of ${currentLesson.length}`;
+        }
+
+        // Update total score display
+        function updateTotalScore() {
+            document.getElementById('totalScore').textContent = `${userProgress.totalScore} / ${userProgress.wordsLearned}`;
+        }
+
+        // Pronunciation functions
+        function setPronunciationWord(chinese, pinyin, meaning) {
+            document.getElementById('pronCharacter').textContent = chinese;
+            document.getElementById('pronPinyin').textContent = pinyin;
+            document.getElementById('pronMeaning').textContent = meaning;
+        }
+
+        function playPronunciation() {
+            // Simulate audio playback
+            const feedback = document.getElementById('recordingFeedback');
+            feedback.innerHTML = '<div class="bg-blue-500 bg-opacity-20 border border-blue-500 rounded p-4"><p>🔊 Playing pronunciation... (Audio simulation)</p></div>';
+            feedback.style.display = 'block';
+            
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 2000);
+        }
+
+        function toggleRecording() {
+            const btn = document.getElementById('recordBtn');
+            const feedback = document.getElementById('recordingFeedback');
+            
+            if (!isRecording) {
+                isRecording = true;
+                btn.textContent = '⏹️ Stop Recording';
+                btn.className = 'bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold';
+                
+                feedback.innerHTML = '<div class="bg-red-500 bg-opacity-20 border border-red-500 rounded p-4"><p>🎤 Recording... Speak now!</p></div>';
+                feedback.style.display = 'block';
+            } else {
+                isRecording = false;
+                btn.textContent = '🎤 Practice Speaking';
+                btn.className = 'bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg font-semibold';
+                
+                // Simulate feedback
+                feedback.innerHTML = '<div class="bg-green-500 bg-opacity-20 border border-green-500 rounded p-4"><p>✅ Great pronunciation! Keep practicing!</p></div>';
+                
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Progress display
+        function updateProgressDisplay() {
+            document.getElementById('totalWordsLearned').textContent = userProgress.wordsLearned;
+            const avgScore = userProgress.wordsLearned > 0 ? Math.round((userProgress.totalScore / userProgress.wordsLearned) * 100) : 0;
+            document.getElementById('averageScore').textContent = avgScore + '%';
+            document.getElementById('streakDays').textContent = '3'; // Simulated streak
+            
+            // Update lesson progress
+            const progressContainer = document.getElementById('lessonProgress');
+            progressContainer.innerHTML = '';
+            
+            Object.keys(lessons).forEach(lessonName => {
+                const total = lessons[lessonName].length;
+                const completed = userProgress.completedLessons[lessonName] || 0;
+                const percentage = Math.round((completed / total) * 100);
+                
+                const progressDiv = document.createElement('div');
+                progressDiv.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-white font-semibold capitalize">${lessonName}</span>
+                        <span class="text-white opacity-75">${completed}/${total}</span>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-full h-3">
+                        <div class="bg-green-500 h-3 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                    </div>
+                `;
+                progressContainer.appendChild(progressDiv);
+            });
+        }
+
+        // Utility functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('lessons');
+            updateTotalScore();
         });
     </script>
 </body>
