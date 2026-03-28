@@ -245,10 +245,16 @@
                 </div>
             </div>
             
-            <div class="bg-white bg-opacity-10 rounded-lg p-6">
+            <div class="bg-white bg-opacity-10 rounded-lg p-6 mb-8">
                 <h3 class="text-xl font-bold text-white mb-4">Lesson Progress</h3>
                 <div id="lessonProgress" class="space-y-3">
                     <!-- Progress bars will be generated here -->
+                </div>
+                <div class="mt-6 text-center">
+                    <button onclick="shareProgress()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition duration-300">
+                        🔗 Share Progress & Generate Link
+                    </button>
+                    <div class="text-white text-sm opacity-75 mt-2">Save your progress in a shareable link</div>
                 </div>
             </div>
         </div>
@@ -436,7 +442,7 @@
             loadQuestion();
         }
 
-        // Complete practice session
+        // Complete practice session - save to both local storage and URL
         function completePractice() {
             const percentage = Math.round((correctAnswers / currentLesson.length) * 100);
             
@@ -447,7 +453,10 @@
             // Update progress
             userProgress.totalScore += correctAnswers;
             userProgress.wordsLearned += currentLesson.length;
+            
+            // Save to both local storage and URL
             localStorage.setItem('mandarinProgress', JSON.stringify(userProgress));
+            saveProgressToURL(); // NEW: Save to URL
             
             updateTotalScore();
         }
@@ -802,7 +811,103 @@
             });
         }
 
-        // Utility functions
+        // URL-based progress system for GitHub Pages
+        function saveProgressToURL() {
+            const progressData = {
+                totalScore: userProgress.totalScore,
+                wordsLearned: userProgress.wordsLearned,
+                completedLessons: userProgress.completedLessons,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Compress and encode progress data
+            const encodedData = btoa(JSON.stringify(progressData));
+            
+            // Update URL without reloading page
+            const newURL = new URL(window.location);
+            newURL.searchParams.set('progress', encodedData);
+            newURL.searchParams.set('user', 'steve'); // Add user identifier
+            window.history.replaceState({}, '', newURL);
+            
+            // Show visual feedback
+            showSaveFeedback('✅ Progress saved to link!');
+            console.log('✅ Progress saved to URL:', encodedData.substring(0, 50) + '...');
+        }
+
+        function showSaveFeedback(message) {
+            const feedback = document.createElement('div');
+            feedback.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm';
+            feedback.textContent = message;
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.remove();
+            }, 2000);
+        }
+
+        function loadProgressFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const progressData = urlParams.get('progress');
+            const userId = urlParams.get('user');
+            
+            if (progressData) {
+                try {
+                    const decodedData = JSON.parse(atob(progressData));
+                    
+                    // Validate data structure
+                    if (decodedData.totalScore !== undefined && decodedData.wordsLearned !== undefined) {
+                        userProgress = {
+                            totalScore: decodedData.totalScore,
+                            wordsLearned: decodedData.wordsLearned,
+                            completedLessons: decodedData.completedLessons || {}
+                        };
+                        
+                        console.log('✅ Progress loaded from URL:', decodedData);
+                        updateTotalScore();
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('❌ Error loading progress from URL:', error);
+                }
+            }
+            
+            return false;
+        }
+
+        function generateShareableLink() {
+            const progressData = {
+                totalScore: userProgress.totalScore,
+                wordsLearned: userProgress.wordsLearned,
+                completedLessons: userProgress.completedLessons,
+                timestamp: new Date().toISOString()
+            };
+            
+            const encodedData = btoa(JSON.stringify(progressData));
+            const baseURL = window.location.origin + window.location.pathname;
+            const shareableURL = `${baseURL}?progress=${encodedData}&user=steve`;
+            
+            return shareableURL;
+        }
+
+        function shareProgress() {
+            const shareableLink = generateShareableLink();
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(shareableLink).then(() => {
+                // Show success message
+                const feedback = document.createElement('div');
+                feedback.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                feedback.textContent = '✅ Progress link copied to clipboard!';
+                document.body.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.remove();
+                }, 3000);
+            }).catch(() => {
+                // Fallback: show the link
+                alert('📋 Copy this link to save/share your progress:\n\n' + shareableLink);
+            });
+        }
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -812,6 +917,17 @@
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
+            // Try to load progress from URL first, then fall back to local storage
+            const urlProgressLoaded = loadProgressFromURL();
+            
+            if (!urlProgressLoaded) {
+                // If no URL progress, load from local storage
+                const savedProgress = localStorage.getItem('mandarinProgress');
+                if (savedProgress) {
+                    userProgress = JSON.parse(savedProgress);
+                }
+            }
+            
             showSection('lessons');
             updateTotalScore();
             loadApiKey(); // Load saved API key (auto-populates with Steve's key)
